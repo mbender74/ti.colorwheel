@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 2
+architectures: arm64 x86_64
+mac: true
+description: ti.colorwheel
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2021 by Your Company
+
+# these should not be edited
+name: ti.colorwheel
+moduleid: ti.colorwheel
+guid: 878888d0-e135-4092-a66e-6234148d32c8
+platform: iphone
+minsdk: 9.3.2 
