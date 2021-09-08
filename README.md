@@ -20,6 +20,7 @@ min iOS 14.x
 	var colorWheelView = colorPickerModule.createView({
         width:50, //default wheel size!!!
         height:50, //default wheel size!!!
+	systemButton:true, // if false, you can set your own child view within this view
         supportsAlpha:false,
         color:'blue', // set a preselected Color
         title:'TEST', // title of Controller
