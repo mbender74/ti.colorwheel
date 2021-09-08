@@ -1,6 +1,6 @@
 #import "TiUIView.h"
 
-@interface TiColorwheelView: TiUIView {
+@interface TiColorwheelView : TiUIView <LayoutAutosizing> {
     UIColorWell *colorwheel;
     UIColorPickerViewController *pickerController;
 }
