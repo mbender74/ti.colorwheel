@@ -1,15 +1,19 @@
 #import "TiColorwheelView.h"
+#import "TiColorwheelViewProxy.h"
+#import "TiUIViewProxy.h"
 #import "TiUtils.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
 #import "TiApp.h"
 #import "Ti2DMatrix.h"
+#import <TitaniumKit/TiProxy.h>
 
 @implementation TiColorwheelView
  
 UIColor *pickerSelectedColor;
-bool scaled = NO;
+bool hasSelectedColor = NO;
+bool isOpen = NO;
 
 float roundToTwo(float num)
 {
@@ -18,369 +22,203 @@ float roundToTwo(float num)
 
 - (UIColorWell *)colorwheel
 {
- 
-  return colorwheel;
+    if (@available(macCatalyst 14.0, *)) {
+        return colorwheel;
+    }
+    else {
+        return nil;
+    }
 }
+
+- (UIView *)customview
+{
+    return customView;
+}
+
 
 
 - (void)initializeState
 {
-    
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
 
-    
-    
-  // Creates and keeps a reference to the view upon initialization
-    if (@available(macCatalyst 14.0, *)) {
-        
-        CGFloat viewHeight;
-        id viewProxyHeight = [self.proxy valueForUndefinedKey:@"height"];
-        if (viewProxyHeight && ![viewProxyHeight isEqual:@"SIZE"]) {
-            viewHeight = ceil([TiUtils dimensionValue:viewProxyHeight].value);
-        }
-        else if (viewProxyHeight && [viewProxyHeight isEqual:@"SIZE"]) {
-            viewHeight = 38;
-        }
-        else {
-            viewHeight = 38;
-        }
-        
-        
-        
-        colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 38, 38)];
-
-
-        
-      //  [colorwheel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-
-       // colorwheel = [[UIColorWell alloc] init];
-
-        
-       // colorwheel = (UIColorWell *)[[UIControl alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        
-//        [self.proxy replaceValue:[NSNumber numberWithFloat:colorwheel.frame.size.width] forKey:@"width" notification:YES];
-//        [self.proxy replaceValue:[NSNumber numberWithFloat:colorwheel.frame.size.height] forKey:@"height" notification:YES];
-
-        
-      //  colorwheel = [[UIColorWell alloc] initWithFrame:self.bounds];
-     //   colorwheel = [[UIColorWell alloc] init];
-
-        
-        //self.frame = colorwheel.bounds;
-        if ([self.proxy valueForKey:@"color"]){
-            colorwheel.selectedColor = [[TiUtils colorValue:[self.proxy valueForKey:@"color"]] _color];
-            pickerSelectedColor = colorwheel.selectedColor;
-        }
-        
-        if ([self.proxy valueForKey:@"title"]){
-            colorwheel.title = [TiUtils stringValue:[self.proxy valueForKey:@"title"]];
-        }
-        if ([self.proxy valueForKey:@"supportsAlpha"]){
-            colorwheel.supportsAlpha = [TiUtils boolValue:[self.proxy valueForKey:@"supportsAlpha"] def:YES];
-        }
-
-        colorwheel.userInteractionEnabled = NO;
-       // [colorwheel addTarget:self action:@selector(pickerDidChange:) forControlEvents:UIControlStateSelected];
-
-        
-        
-//
-//        [self.proxy layoutProperties]->width.type = poWidth.type;
-//
-//
-//        LayoutConstraint *viewLayout = [self.proxy layoutProperties];
-//        switch (viewLayout->height.type) {
-//        case TiDimensionTypeDip:
-//          size += viewLayout->height.value;
-//          break;
-//        case TiDimensionTypeAuto:
-//          size += [viewProxy autoHeightForSize:[tableview bounds].size];
-//          break;
-//        default:
-//          size += DEFAULT_SECTION_HEADERFOOTER_HEIGHT;
-//          break;
-//        }
-//
-//
-        
-        
-//        CGRect wheelframe = self.bounds;
-//        wheelframe.size.height = viewHeight;
-//        wheelframe.size.width = viewHeight;
-//        self.bounds = wheelframe;
-        
-        
-       // colorwheel.clipsToBounds = YES;
-       // colorwheel.translatesAutoresizingMaskIntoConstraints = NO;
-
-        
-
-        
-        CGFloat factor = roundToTwo(viewHeight / colorwheel.frame.size.height);
-
-        
-//        NSLog(@"factor %f",factor);
-//        NSLog(@"self.bounds.size.width %f",viewHeight);
-
-        
-//        NSArray *subviews = [colorwheel subviews];
-//        if ([subviews count] > 0) {
-//          // Obfuscate private class name
-//          for (UIView *view in subviews) {
-//              NSLog(@"[colorwheel for subviews].className %@",view.className);
-//
-//              //view.frame = colorwheel.bounds;
-//          }
-//        }
-        
-//
-//
-//
-//        NSLayoutConstraint * c_1 =[NSLayoutConstraint constraintWithItem:self
-//                                                               attribute:NSLayoutAttributeRight
-//                                                               relatedBy:NSLayoutRelationEqual
-//                                                                  toItem:colorwheel
-//                                                               attribute:NSLayoutAttributeRight
-//                                                              multiplier:1.0 constant:100];
-//        NSLayoutConstraint * c_2 =[NSLayoutConstraint constraintWithItem:self
-//                                                               attribute:NSLayoutAttributeTop
-//                                                               relatedBy:NSLayoutRelationEqual
-//                                                                  toItem:colorwheel
-//                                                               attribute:NSLayoutAttributeTop
-//                                                              multiplier:1.0 constant:-1*100];
-//        NSLayoutConstraint * equal_w = [NSLayoutConstraint constraintWithItem:colorwheel
-//                                                                    attribute:NSLayoutAttributeWidth
-//                                                                    relatedBy:NSLayoutRelationEqual
-//                                                                       toItem:nil
-//                                                                    attribute:0
-//                                                                   multiplier:1.0
-//                                                                     constant:100];
-//        NSLayoutConstraint * equal_h = [NSLayoutConstraint constraintWithItem:colorwheel
-//                                                                    attribute:NSLayoutAttributeHeight
-//                                                                    relatedBy:NSLayoutRelationEqual
-//                                                                       toItem:nil
-//                                                                    attribute:0
-//                                                                   multiplier:1.0
-//                                                                     constant:100];
-//       // [self addConstraints:@[c_1,c_2]];
-//        [colorwheel addConstraints:@[equal_w,equal_h]];
-//
-//
-        
-        
-       // NSLog(@"[colorwheel subviews].firstObject.className %@",[colorwheel subviews].firstObject);
-        colorwheel.center = self.center;
-       // [TiUtils setView:colorwheel positionRect:self.bounds];
-       // [colorwheel layoutSubviews];
-
-
-        [self addSubview:colorwheel];
-        
-     //   if (viewHeight > 1){
-            CGRect oldFrame = colorwheel.frame;
-        
-         //   NSLog(@"[colorwheel origin.x %f",colorwheel.bounds.origin.x);
-         //   NSLog(@"[colorwheel origin.y %f",colorwheel.bounds.origin.y);
-
-           
-            if (factor > 1){
-                scaled = YES;
-                colorwheel.transform = CGAffineTransformMakeScale(factor, factor);
-                CGRect newFrame = colorwheel.frame;
-
-                CGFloat newFrameSize = ceilf(-(newFrame.size.width / 2) - (((newFrame.size.width / 2) - oldFrame.size.width)*2));
+          // Creates and keeps a reference to the view upon initialization
+            if (@available(macCatalyst 14.0, *)) {
                 
-                int intnewFrameSize = (int) newFrameSize;
+//                CGRect selfFrame = self.bounds;
+//                selfFrame.size.width = 44;
+//                selfFrame.size.height = 44;
+//                self.frame = selfFrame;
+//
+//                [self.proxy replaceValue:[NSNumber numberWithInteger: 44] forKey:@"height" notification:YES];
+//
+//                [self.proxy replaceValue:[NSNumber numberWithInteger: 44] forKey:@"width" notification:YES];
+
+                colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+
                 
-                if ( intnewFrameSize % 2 == 0) {
-                  // remainder 0
-                } else
-                {
-                    intnewFrameSize = intnewFrameSize - 1;
+                //colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 50, 50)];
+
+                colorwheel.clipsToBounds = NO;
+                colorwheel.userInteractionEnabled = NO;
+
+//                [colorwheel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+
+                if ([self.proxy valueForKey:@"selectedColor"]){
+                    colorwheel.selectedColor = [[TiUtils colorValue:[self.proxy valueForKey:@"selectedColor"]] _color];
+                    pickerSelectedColor = colorwheel.selectedColor;
                 }
                 
-                newFrame.origin.x = intnewFrameSize;
-                newFrame.origin.y = intnewFrameSize;
-//
-//                NSLog(@"[colorwheel roundToTwo(oldFrame.origin.x/factor) %f",roundToTwo(oldFrame.origin.x/factor));
-
-                colorwheel.frame = newFrame;
+                if ([self.proxy valueForKey:@"title"]){
+                    colorwheel.title = [TiUtils stringValue:[self.proxy valueForKey:@"title"]];
+                }
+                if ([self.proxy valueForKey:@"supportsAlpha"]){
+                    colorwheel.supportsAlpha = [TiUtils boolValue:[self.proxy valueForKey:@"supportsAlpha"] def:YES];
+                }
                 
-               // NSLog(@"[colorwheel after origin.x %f",colorwheel.frame.origin.x);
-              //  NSLog(@"[colorwheel after origin.y %f",colorwheel.frame.origin.y);
+//                UIView* maskView = [[UIView alloc] initWithFrame:self.bounds];
+//                maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//                maskView.clipsToBounds = NO;
+//
+//                maskView.userInteractionEnabled = NO;
+//
+//               // [colorwheel addTarget:self action:@selector(pickerDidChangeSelection:) forControlEvents:UIControlEventValueChanged];
+//
+//                [maskView addSubview:colorwheel];
+//                [self addSubview:maskView];
+//
+//                [self bringSubviewToFront:maskView];
+//
+                
+                [self addSubview:colorwheel];
+
+                
+            } else {
+                
+                // Fallback on earlier versions
             }
-    
-           
-      //  }
-//        newFrame.origin.x =
-        
-//        if (factor > 1){
-//           // colorwheel.center = CGPointMake(0.5, 0.5);
-//           // CGPoint center = colorwheel.center;
-//           [colorwheel layer].anchorPoint = CGPointMake([TiUtils floatValue:[self.proxy valueForKey:@"anchor"]], [TiUtils floatValue:[self.proxy valueForKey:@"anchor"]]);
-//
-//           // colorwheel.translatesAutoresizingMaskIntoConstraints = YES;
-//
-//           // [self setAnchorPoint:CGPointMake(0.0, 0.0) forView:colorwheel];
-//
-//           // factor = factor + 0.2;
-//
-//            NSLog(@"factor %f",factor);
-//
-//            CGFloat sx = factor;
-//            CGFloat sy = factor;
-//            CGFloat w = colorwheel.frame.size.width;
-//            CGFloat h = colorwheel.frame.size.height;
-//
-//
-//            NSLog(@"w %f",w);
-//
-//
-//            CGFloat goodSx = ceilf(w * sx)/w;
-//            CGFloat goodSy = ceilf(h * sx)/h;
-//
-//            CGAffineTransform t = CGAffineTransformMakeScale(goodSx, goodSy);
-////
-////            //CGAffineTransform transform = CGAffineTransformMakeTranslation(0.0f, -shift);
-////          //  Ti2DMatrix * matrix = [[Ti2DMatrix alloc] initWithMatrix:t];
-////
-////
-////           // CGAffineTransform t = CGAffineTransformMakeScale(goodSx, goodSy);
-////
-////           // CGAffineTransform translate = CGAffineTransformMakeTranslation(-goodSx, -goodSy);
-////            //colorwheel.transform = CGAffineTransformConcat(translate, t);
-////            colorwheel.transform = t;
-////
-////            NSLog(@"transform ");
-////          //  [self setTransform_:matrix];
-////
-////
-////           // colorwheel.transform = [self scaleTransform:colorwheel scaledBy:CGPointMake(factor, factor)  aroundAnchorPoint:CGPointMake(0.0, 0.0) ];
-////
-////            colorwheel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-////           // [colorwheel layer].anchorPoint = CGPointMake(0.0, 0.0);
-//
-//        }
-
-        
-        
-//        self.frame = colorwheel.bounds;
-
-//        colorwheel.sizeToFit
-        
-        
-       // colorwheel.center = CGPointMake(selfbounds.size.width, selfbounds.size.height);
-
-        
-    } else {
-        // Fallback on earlier versions
     }
-  }
+    else {
+        
+        if ([self.proxy valueForKey:@"customView"]){
+            TiUIViewProxy *customViewProxy = [self.proxy valueForKey:@"customView"];
+            if (customViewProxy != nil){
+                customView = customViewProxy.view;
+                customView.clipsToBounds = NO;
+                customView.userInteractionEnabled = NO;
+                //customView.frame = self.bounds;
+                [self addSubview:customView];
+            }
+        }
+        
+
+        
+      //  #define NO_SYSTEM_BUTTON = true;
+//        UIView* maskView = [[UIView alloc] initWithFrame:self.bounds];
+//        maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        maskView.clipsToBounds = NO;
+//
+//        maskView.userInteractionEnabled = NO;
+//
+//       // [colorwheel addTarget:self action:@selector(pickerDidChangeSelection:) forControlEvents:UIControlEventValueChanged];
+//
+//        [maskView addSubview:colorwheel];
+//        [self addSubview:maskView];
+//
+//        [self bringSubviewToFront:maskView];
+    }
+    
+    self.userInteractionEnabled = YES;
+
+    
   [super initializeState];
 }
 
-//- (void)layoutSubviews
+
+//#ifndef TI_USE_AUTOLAYOUT
+//- (UIView *)viewGroupWrapper
 //{
-//    CGAffineTransform transform = CGAffineTransformMakeScale(1.0/1.2, 1.0/1.2);
-//
-//    for(UIView *view in self.subviews){
-//        view.transform = transform;
+//  if (viewGroupWrapper == nil) {
+//    viewGroupWrapper = [[UIView alloc] initWithFrame:[self bounds]];
+//    [viewGroupWrapper setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+//  }
+//  if (colorwheel != [viewGroupWrapper superview]) {
+//    if (colorwheel != nil) {
+//      [viewGroupWrapper setFrame:[colorwheel bounds]];
+//      [colorwheel addSubview:viewGroupWrapper];
+//    } else {
+//      [viewGroupWrapper removeFromSuperview];
 //    }
+//  }
+//  return viewGroupWrapper;
 //}
+//#endif
 
-//-(CGAffineTransform)scaleTransform:(UIView *)view scaledBy:(CGPoint)scale  aroundAnchorPoint:(CGPoint )relativeAnchorPoint {
-//
-//    CGRect bounds = view.bounds;
-//    
-//    CGPoint anchorPoint = CGPointMake(bounds.size.width * relativeAnchorPoint.x, bounds.size.height * relativeAnchorPoint.y);
-//    
-//    
-//    CGAffineTransform t = CGAffineTransformMakeScale(scale.x, scale.y);
-//    
-//    
-//    CGAffineTransform translate = CGAffineTransformMakeTranslation(anchorPoint.x, anchorPoint.y);
-//    
-//    CGAffineTransform scaleTrans = CGAffineTransformMakeScale(scale.x, scale.y);
-//    
-//    CGAffineTransform translate2 = CGAffineTransformMakeTranslation(-anchorPoint.x, -anchorPoint.y);
-//
-//    CGAffineTransform transformView =  CGAffineTransformConcat(translate, scaleTrans);
-//    CGAffineTransform transformView2 =  CGAffineTransformConcat(transformView, translate2);
-//
-//    return transformView2;
-//    
-//}
-//
-//
-//
-//-(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
+//-(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 //{
-//    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x,
-//                                   view.bounds.size.height * anchorPoint.y);
-//    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x,
-//                                   view.bounds.size.height * view.layer.anchorPoint.y);
 //
-//    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
-//    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
+//    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+//        [TiUtils setView:colorwheel positionRect:bounds];
+//    }
 //
-//    CGPoint position = view.layer.position;
+////    for (UIView *child in [self subviews])
+////    {
+////        [TiUtils setView:child positionRect:bounds];
+////    }
 //
-//    position.x -= oldPoint.x;
-//    position.x += newPoint.x;
-//
-//    position.y -= oldPoint.y;
-//    position.y += newPoint.y;
-//
-//    view.layer.position = position;
-//    view.layer.anchorPoint = anchorPoint;
-//}
-//
-
-//- (void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
-//{
-//  [super frameSizeChanged:frame bounds:bounds];
-//  [self setCenter:[self center]];
-//}
-//
-//- (void)setCenter:(CGPoint)center
-//{
-//  CGSize ourSize = [self bounds].size;
-//  CGPoint ourAnchor = [[self layer] anchorPoint];
-//  CGFloat originx = center.x - (ourSize.width * ourAnchor.x);
-//  CGFloat originy = center.y - (ourSize.height * ourAnchor.y);
-//
-//  center.x -= originx - floorf(originx);
-//  center.y -= originy - floorf(originy);
-//
-//  [super setCenter:center];
+//    [super frameSizeChanged:frame bounds:bounds];
 //}
 
 
 - (void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 {
-  //  NSLog(@"frameSizeChanged ");
-    if (scaled == NO){
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
         [TiUtils setView:colorwheel positionRect:bounds];
     }
+    else {
+        if (customView != nil){
+            [TiUtils setView:customView positionRect:bounds];
+        }
+    }
+  [super frameSizeChanged:frame bounds:bounds];
+  [self setCenter:[self center]];
 }
+//
+- (void)setCenter:(CGPoint)center
+{
+  CGSize ourSize = [self bounds].size;
+  CGPoint ourAnchor = [[self layer] anchorPoint];
+  CGFloat originx = center.x - (ourSize.width * ourAnchor.x);
+  CGFloat originy = center.y - (ourSize.height * ourAnchor.y);
+
+  center.x -= originx - floorf(originx);
+  center.y -= originy - floorf(originy);
+
+  [super setCenter:center];
+}
+
 
 - (void)setColor_:(id)color
 {
   // Assigns the view's background color
-    colorwheel.selectedColor = [[TiUtils colorValue:color] _color];
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+        colorwheel.selectedColor = [[TiUtils colorValue:color] _color];
+    }
 }
 - (void)setSupportsAlpha_:(id)arg
 {
   // Assigns the view's background color
-    colorwheel.supportsAlpha = [TiUtils boolValue:arg];
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+        colorwheel.supportsAlpha = [TiUtils boolValue:arg];
+    }
 }
 
 - (void)setTitle_:(id)title
 {
   // Assigns the view's background color
-    colorwheel.title = [TiUtils stringValue:title];
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+        colorwheel.title = [TiUtils stringValue:title];
+    }
 }
-
 
 // CREDITS: http://stackoverflow.com/a/26341062/5537752
 - (NSString *)hexStringFromColor:(UIColor *)color {
@@ -396,19 +234,36 @@ float roundToTwo(float num)
             lroundf(b * 255)];
 }
 
-//- (CGFloat)verifyWidth:(CGFloat)suggestedWidth
-//{
+- (CGFloat)verifyWidth:(CGFloat)suggestedWidth
+{
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+        return 44;
+    }
+    else {
+     //   return self.bounds.size.width;
+        return [[self customview] sizeThatFits:CGSizeZero].width;
+    }
 //  return [[self colorwheel] sizeThatFits:CGSizeZero].width;
-//}
-//
-//- (CGFloat)verifyHeight:(CGFloat)suggestedHeight
-//{
+}
+
+- (CGFloat)verifyHeight:(CGFloat)suggestedHeight
+{
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+        return 44;
+    }
+    else {
+        //return self.bounds.size.height;
+        return [[self customview] sizeThatFits:CGSizeZero].height;
+    }
 //  return [[self colorwheel] sizeThatFits:CGSizeZero].height;
-//}
+}
+//#ifndef NO_SYSTEM_BUTTON
 //
-//USE_PROXY_FOR_VERIFY_AUTORESIZING
+USE_PROXY_FOR_VERIFY_AUTORESIZING
+//
+//#endif
 
-
+//
 //-(void)pickerDidChangeSelection:(id) obj {
 //    NSLog(@"pickerDidChangeSelection ");
 //
@@ -419,117 +274,337 @@ float roundToTwo(float num)
 //}
 
 
--(void)pickerDidChange:(id) obj {
-   // NSLog(@"pickerDidChangeSelection ");
-}
 
 
 #pragma Public APIs
 
--(void)showPicker:(id) obj {
-   // NSLog(@"presentPickerController ");
+//-(void)setWidth_:(id)width_
+//{
+//    
+//    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+//        width = TiDimensionFromObject([NSNumber numberWithInteger: 44]);
+//        [self updateContentMode];
+//
+//    }
+//    else {
+//        width = TiDimensionFromObject(width_);
+//    }
+//}
+//
+//-(void)setHeight_:(id)height_
+//{
+//    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+//        height = TiDimensionFromObject([NSNumber numberWithInteger: 44]);
+//        [self updateContentMode];
+//
+//    }
+//    else {
+//        height = TiDimensionFromObject(height_);
+//    }
+//}
+
+
+-(void)hidePicker:(id)args {
+    ENSURE_SINGLE_ARG_OR_NIL(args, NSDictionary);
+
+    if (self.hasReturnView == NO){
+        TiThreadPerformOnMainThread(
+         ^{
+             [self->pickerController dismissViewControllerAnimated:[TiUtils boolValue:[args valueForKey:@"animated"] def:YES] completion:^{
+                self.userInteractionEnabled = YES;
+                hasSelectedColor = NO;
+                isOpen = NO;
+                pickerSelectedColor = nil;
+                self.hasReturnView = NO;
+            }];
+         },
+         YES);
+    }
+    else {
+        
+        TiThreadPerformOnMainThread(
+         ^{
+             [self.containerViewController windowWillClose];
+
+             if ([TiUtils boolValue:[args valueForKey:@"animated"] def:NO] == YES){
+                 //NSLog(@"hidePicker View animated");
+                 [UIView animateWithDuration:0.2
+                                  animations:^{
+                                    self.containerViewController.view.alpha = 0.0;
+                                     [self.proxy fireEvent:@"hide" withObject:nil];
+                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                            //NSLog(@"did hidePicker View animated");
+
+                                         [[self.containerViewController view] removeFromSuperview];
+                                          [self.containerViewController windowDidClose];
+                                          self.hasReturnView = NO;
+                                          self.containerViewController.view = nil;
+                                          self.containerViewController = nil;
+                                     });
+                 }];
+             }
+             else {
+                 [self.proxy fireEvent:@"hide" withObject:nil];
+                 [[self.containerViewController view] removeFromSuperview];
+                 [self.containerViewController windowDidClose];
+                  self.hasReturnView = NO;
+                  self.containerViewController.view = nil;
+                  self.containerViewController = nil;
+
+             }
+
+             
+             
+                 self.userInteractionEnabled = YES;
+                 hasSelectedColor = NO;
+                 isOpen = NO;
+                 pickerSelectedColor = nil;
+                 
+
+         
+         },
+         YES);
+        
+        
+            
+    }
+  //  NSLog(@"hidePicker View ");
+//    [[self presentingViewController] dismissViewControllerAnimated:NO completion:nil]
+}
+
+-(id)showPicker:(id)args {
+    ENSURE_SINGLE_ARG_OR_NIL(args, NSDictionary);
+
     if (@available(macCatalyst 14.0, *)) {
-        pickerController = [[UIColorPickerViewController alloc] init];
-        
-        pickerController.presentationController.delegate = self;
+        if (isOpen == NO){
 
-        if ([self.proxy valueForKey:@"color"]){
-            pickerController.selectedColor = [[TiUtils colorValue:[self.proxy valueForKey:@"color"]] _color];
-            pickerSelectedColor = pickerController.selectedColor;
-        }
-        if ([self.proxy valueForKey:@"title"]){
-            pickerController.title = [TiUtils stringValue:[self.proxy valueForKey:@"title"]];
-        }
-        if ([self.proxy valueForKey:@"supportsAlpha"]){
-            pickerController.supportsAlpha = [TiUtils boolValue:[self.proxy valueForKey:@"supportsAlpha"] def:YES];
-        }
-        
-        pickerController.delegate = self;
-        
-        
-        [[TiApp app] showModalController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES]];
+                isOpen = YES;
+                self.userInteractionEnabled = NO;
 
+                
+                hasSelectedColor = NO;
+                
+                if ([TiUtils boolValue:[args valueForKey:@"returnView"] def:NO] == NO){
+                    pickerController = [[UIColorPickerViewController alloc] init];
+
+                    pickerController.preferredContentSize = pickerController.view.bounds.size;
+            //        pickerController.modalPresentationStyle
+                    
+                    pickerController.modalPresentationStyle = UIModalPresentationPopover;
+
+                    
+                    UIPopoverPresentationController *thePresentationController = [pickerController popoverPresentationController];
+                    
+                    if (self != nil && (self.window != nil)) {
+                        thePresentationController.sourceView = self;
+                        thePresentationController.sourceRect = (CGRectEqualToRect(CGRectZero, CGRectZero) ? [self bounds] : CGRectZero);
+                    }
+                    
+                }
+                else {
+                    pickerController = [[UIColorPickerViewController alloc] init];
+                }
+            
+                pickerController.presentationController.delegate = self;
+                pickerController.delegate = self;
+
+                    
+                    
+                if ([self.proxy valueForKey:@"selectedColor"] || (colorwheel!=nil && colorwheel.selectedColor != nil)){
+                    if (colorwheel!=nil && colorwheel.selectedColor != nil) {
+                        pickerController.selectedColor = colorwheel.selectedColor;
+                        pickerSelectedColor = pickerController.selectedColor;
+                    }
+                    else if ([self.proxy valueForKey:@"selectedColor"]){
+                        pickerController.selectedColor = [[TiUtils colorValue:[self.proxy valueForKey:@"selectedColor"]] _color];
+                        pickerSelectedColor = pickerController.selectedColor;
+                    }
+                    else {
+                        pickerSelectedColor = nil;
+                    }
+                }
+                if ([self.proxy valueForKey:@"title"]){
+                    pickerController.title = [TiUtils stringValue:[self.proxy valueForKey:@"title"]];
+                }
+                if ([self.proxy valueForKey:@"supportsAlpha"]){
+                    pickerController.supportsAlpha = [TiUtils boolValue:[self.proxy valueForKey:@"supportsAlpha"] def:YES];
+                }
+                
+                
+                if ([self.proxy valueForKey:@"tintColor"]){
+                    
+                    UINavigationBar *navBar = [[pickerController navigationController] navigationBar];
+                              [navBar setTintColor:[[TiUtils colorValue:[self.proxy valueForKey:@"tintColor"]] _color]];
+                    
+                    [[pickerController view] setTintColor:[[TiUtils colorValue:[self.proxy valueForKey:@"tintColor"]] _color]];
+
+                }
+        //        if ([self.proxy valueForKey:@"translucent"]){
+        //
+        //            UINavigationBar *navBar = [[pickerController navigationController] navigationBar];
+        //
+        //            navBar.translucent = [TiUtils boolValue:[self.proxy valueForKey:@"translucent"] def:NO];
+        //
+        //        }
+        //        if ([self.proxy valueForKey:@"colorPickerBackgroundColor"]){
+        //            pickerController.navigationController.view.backgroundColor = [[TiUtils colorValue:[self.proxy valueForKey:@"colorPickerBackgroundColor"]] _color];
+        //        }
+        //
+                
+                
+                if ([TiUtils boolValue:[args valueForKey:@"returnView"] def:NO] == NO){
+                    [[TiApp app] controller].modalPresentationStyle = UIModalPresentationCurrentContext;
+
+                        self.hasReturnView = NO;
+
+                       [[[TiApp app] controller] presentViewController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES] completion:^{
+                       }];
+                    return nil;
+                }
+                else {
+
+                    
+                    if ([args valueForKey:@"containerViewForController"]){
+                        self.hasReturnView = YES;
+                        self.containerViewController = [args valueForKey:@"containerViewForController"];
+                        
+                        pickerController.view.layer.cornerRadius = 12;
+                        pickerController.view.layer.masksToBounds = true;
+                        pickerController.view.clipsToBounds = YES;
+
+                       // pickerController.preferredContentSize = self.containerViewController.view.bounds.size;
+
+                        
+                        //pickerController.view.frame = self.containerViewController.view.bounds;
+                        
+//                        CGRect newFrame = self.containerViewController.view.bounds;
+//                        newFrame.size.height = 400;
+//                        newFrame.origin.y = 200;
+//
+//                        pickerController.view.frame = newFrame;
+//
+                        
+                        
+                        [pickerController.view sizeToFit];
+                        //pickerController.view.translatesAutoresizingMaskIntoConstraints = NO;
+                        
+                        [self.containerViewController.view addSubview:pickerController.view];
+                       // pickerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+                        [self.containerViewController contentsWillChange];
+                        
+                        return self.containerViewController;
+                    }
+                    else {
+                        return nil;
+                    }
+                }
+                
+        //        self. presentViewController
+        //
+        //        [[TiApp app] showModalController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES]];
+
+        
+        }
+        else {
+            // already open
+            return nil;
+        }
         
     } else {
         // Fallback on earlier versions
+        return nil;
     }
+  //}
 }
 
 
 
-
-
+//
+//[self.proxy replaceValue:[self hexStringFromColor:colorPicker.selectedColor] forKey:@"selectedColor" notification:NO];
 
 
 #pragma mark Delegates
 
 - (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
 {
-  //  NSLog(@"[ERROR] presentationControllerDidDismiss because cancel :");
 
-    if ([self.proxy valueForKey:@"color"]){
+    if ([self.proxy valueForKey:@"selectedColor"]){
         if (colorwheel != nil){
-            if (colorwheel.selectedColor == [[TiUtils colorValue:[self.proxy valueForKey:@"color"]] _color]){
+            if (colorwheel.selectedColor == [[TiUtils colorValue:[self.proxy valueForKey:@"selectedColor"]] _color] && hasSelectedColor == NO){
                 [self.proxy fireEvent:@"cancel" withObject:nil];
             }
         }
-        if (pickerSelectedColor == nil){
-            [self.proxy fireEvent:@"cancel" withObject:nil];
+        else {
+            if (hasSelectedColor == NO){
+                [self.proxy fireEvent:@"cancel" withObject:nil];
+            }
         }
     }
     else{
-        if (pickerSelectedColor == nil){
-            [self.proxy fireEvent:@"cancel" withObject:nil];
-        }
+        [self.proxy fireEvent:@"cancel" withObject:nil];
     }
-    [self.proxy fireEvent:@"closed" withObject:nil];
-
+    pickerSelectedColor = nil;
+    isOpen = NO;
+    self.userInteractionEnabled = YES;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.proxy fireEvent:@"closed" withObject:nil];
+    });
 }
 
 
 -(void)colorPickerViewControllerDidFinish:(UIColorPickerViewController *)colorPicker
 {
-    if ([self.proxy valueForKey:@"color"]){
-        if (colorPicker.selectedColor == [[TiUtils colorValue:[self.proxy valueForKey:@"color"]] _color]){
-            [self.proxy fireEvent:@"cancel" withObject:nil];
+    if ([self.proxy valueForKey:@"selectedColor"]){
+        if (colorwheel != nil){
+            if ([colorwheel.selectedColor isEqual:colorPicker.selectedColor] && hasSelectedColor == NO){
+                [self.proxy fireEvent:@"cancel" withObject:nil];
+            }
+        }
+        else {
+            if ([[[TiUtils colorValue:[self.proxy valueForKey:@"selectedColor"]] _color] isEqual:colorPicker.selectedColor] && hasSelectedColor == NO){
+                [self.proxy fireEvent:@"cancel" withObject:nil];
+            }
         }
     }
-    else if (pickerSelectedColor == nil){
+    else {
         [self.proxy fireEvent:@"cancel" withObject:nil];
     }
-
-    [self.proxy fireEvent:@"closed" withObject:nil];
+    pickerSelectedColor = nil;
+    isOpen = NO;
+    self.userInteractionEnabled = YES;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.proxy fireEvent:@"closed" withObject:nil];
+    });
 }
 
 -(void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)colorPicker
 {
-    if ([pickerSelectedColor isEqual:colorPicker.selectedColor]){
-       // NSLog(@"colorPickerViewControllerDidSelectColor SAME ");
 
-        if (colorwheel != nil){
-            colorwheel.selectedColor = colorPicker.selectedColor;
-        }
-        pickerSelectedColor = colorPicker.selectedColor;
-        
-        [[self proxy] fireEvent:@"selection" withObject:@{
-            @"color": [self hexStringFromColor:colorPicker.selectedColor]
-        }];
-        
+    if ([pickerSelectedColor isEqual:colorPicker.selectedColor]){
         return;
     }
     else {
-      //  NSLog(@"colorPickerViewControllerDidSelectColor ");
-
-        if (colorwheel != nil){
-            colorwheel.selectedColor = colorPicker.selectedColor;
-        }
         pickerSelectedColor = colorPicker.selectedColor;
-        
+        hasSelectedColor = YES;
+        if (self->colorwheel != nil){
+            [self->colorwheel setSelectedColor:colorPicker.selectedColor];
+        }
         [[self proxy] fireEvent:@"selection" withObject:@{
             @"color": [self hexStringFromColor:colorPicker.selectedColor]
         }];
+        
+        if ([self.proxy valueForKey:@"selectedColor"]){
+            [self.proxy replaceValue:[self hexStringFromColor:colorPicker.selectedColor] forKey:@"selectedColor" notification:NO];
+        }
+        else {
+            [self.proxy setValue:[self hexStringFromColor:colorPicker.selectedColor] forUndefinedKey:@"selectedColor"];
+        }
     }
-
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        pickerSelectedColor = nil;
+    });
 }
 
 @end
+

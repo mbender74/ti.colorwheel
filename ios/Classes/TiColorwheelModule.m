@@ -32,30 +32,20 @@
 {
   // This method is called when the module is first loaded
   // You *must* call the superclass
-  [super startup];
-  DebugLog(@"[DEBUG] %@ loaded", self);
+    if ([TiUtils isIOSVersionOrGreater:@"14.0"]){
+        [super startup];
+        DebugLog(@"[DEBUG] %@ loaded", self);
+    }
+    else{
+        DebugLog(@"[DEBUG] %@ NOT loaded iOS version MUST be 14+", self);
+    }
 }
 
 #pragma Public APIs
 
-- (NSString *)example:(id)args
+- (NSNumber *)isSupported:(id)unused
 {
-  // Example method. 
-  // Call with "MyModule.example(args)"
-  return @"hello world";
-}
-
-- (NSString *)exampleProp
-{
-  // Example property getter. 
-  // Call with "MyModule.exampleProp" or "MyModule.getExampleProp()"
-  return @"Titanium rocks!";
-}
-
-- (void)setExampleProp:(id)value
-{
-  // Example property setter. 
-  // Call with "MyModule.exampleProp = 'newValue'" or "MyModule.setExampleProp('newValue')"
+    return @([TiUtils isIOSVersionOrGreater:@"14.0"]);
 }
 
 @end

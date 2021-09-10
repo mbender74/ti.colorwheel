@@ -1,8 +1,11 @@
-#import "TiViewProxy.h"
+#import "TiUIViewProxy.h"
 #import "TiColorwheelView.h"
+#import "TiColorwheelModule.h"
+#import <TitaniumKit/TiViewProxy.h>
 
-@interface TiColorwheelViewProxy: TiViewProxy {
+@interface TiColorwheelViewProxy: TiUIViewProxy {
+   
 }
--(void)showPicker:(id) obj;
-
+-(id)showPicker:(id)args;
+-(void)hidePicker:(id)args;
 @end

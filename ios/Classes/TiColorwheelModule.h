@@ -6,6 +6,7 @@
  */
 
 #import "TiModule.h"
+API_AVAILABLE(ios(14.0))
 
 @interface TiColorwheelModule : TiModule {
 
