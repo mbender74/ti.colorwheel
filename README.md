@@ -15,6 +15,7 @@ min iOS 14.x
 
 ## Usage
 
+```javascript
 	var colorPickerModule = require('ti.colorwheel');
 
 	// customButtonView - for when systemButton:false
@@ -163,3 +164,4 @@ min iOS 14.x
 	});
 
 	YOUR_PARENT_VIEW.add(colorWheelView);
+```javascript
