@@ -10,6 +10,7 @@ min iOS 14.x
 
 <img src="./exampl1.png" alt="Example (iOS)" width="100" />
 <img src="./example2.png" alt="Example (iOS)" width="300" />
+<img src="./example3.png" alt="Example (iOS iPad)" width="200" />
 
 
 
