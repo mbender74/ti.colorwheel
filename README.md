@@ -8,7 +8,7 @@ min Ti SDK 9.3.2
 min iOS 14.x
 
 
-<img src="./exampl1.png" alt="Example (iOS)" width="300" />
+<img src="./exampl1.png" alt="Example (iOS)" width="100" />
 <img src="./example2.png" alt="Example (iOS)" width="300" />
 
 
@@ -20,6 +20,7 @@ min iOS 14.x
 	var colorWheelView = colorPickerModule.createView({
         width:50, //default wheel size!!!
         height:50, //default wheel size!!!
+	systemButton:true, // if false, you can set your own child view within this view
         supportsAlpha:false,
         color:'blue', // set a preselected Color
         title:'TEST', // title of Controller
