@@ -164,4 +164,4 @@ min iOS 14.x
 	});
 
 	YOUR_PARENT_VIEW.add(colorWheelView);
-```javascript
+```
