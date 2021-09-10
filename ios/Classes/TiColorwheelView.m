@@ -53,12 +53,14 @@ float roundToTwo(float num)
 //
 //                [self.proxy replaceValue:[NSNumber numberWithInteger: 44] forKey:@"width" notification:YES];
 
-                colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+  //              colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 50, 50)];
 
+                
+                colorwheel = [[UIColorWell alloc] initWithFrame:self.bounds];
                 
                 //colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 50, 50)];
 
-                colorwheel.clipsToBounds = NO;
+                colorwheel.clipsToBounds = YES;
                 colorwheel.userInteractionEnabled = NO;
 
 //                [colorwheel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
@@ -237,7 +239,8 @@ float roundToTwo(float num)
 - (CGFloat)verifyWidth:(CGFloat)suggestedWidth
 {
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
-        return 44;
+//        return 38;
+        return [[self colorwheel] sizeThatFits:CGSizeZero].width;
     }
     else {
      //   return self.bounds.size.width;
@@ -249,7 +252,8 @@ float roundToTwo(float num)
 - (CGFloat)verifyHeight:(CGFloat)suggestedHeight
 {
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
-        return 44;
+//        return 38;
+        return [[self colorwheel] sizeThatFits:CGSizeZero].height;
     }
     else {
         //return self.bounds.size.height;
