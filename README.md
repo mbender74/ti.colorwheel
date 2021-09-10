@@ -128,6 +128,7 @@ min iOS 14.x
 		if (colorPickerControllerView != null){
 			YOUR_PARENT_VIEW.add(colorPickerControllerView);
 			// or whatever view you wanna add the colorPickerControlerView
+			// when returnView:true  and containerViewForController:someTiUIView is set....
 		}
 	});
 
