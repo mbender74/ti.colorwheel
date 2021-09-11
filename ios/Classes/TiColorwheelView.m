@@ -39,6 +39,8 @@ float roundToTwo(float num)
 
 - (void)initializeState
 {
+    [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
 
           // Creates and keeps a reference to the view upon initialization
@@ -53,14 +55,14 @@ float roundToTwo(float num)
 //
 //                [self.proxy replaceValue:[NSNumber numberWithInteger: 44] forKey:@"width" notification:YES];
 
-  //              colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 50, 50)];
+                colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
 
                 
-                colorwheel = [[UIColorWell alloc] initWithFrame:self.bounds];
+                //colorwheel = [[UIColorWell alloc] initWithFrame:self.bounds];
                 
                 //colorwheel = [[UIColorWell alloc] initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, 50, 50)];
 
-                colorwheel.clipsToBounds = YES;
+                colorwheel.clipsToBounds = NO;
                 colorwheel.userInteractionEnabled = NO;
 
 //                [colorwheel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
@@ -77,21 +79,19 @@ float roundToTwo(float num)
                     colorwheel.supportsAlpha = [TiUtils boolValue:[self.proxy valueForKey:@"supportsAlpha"] def:YES];
                 }
                 
-//                UIView* maskView = [[UIView alloc] initWithFrame:self.bounds];
-//                maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//                maskView.clipsToBounds = NO;
-//
-//                maskView.userInteractionEnabled = NO;
-//
-//               // [colorwheel addTarget:self action:@selector(pickerDidChangeSelection:) forControlEvents:UIControlEventValueChanged];
-//
-//                [maskView addSubview:colorwheel];
-//                [self addSubview:maskView];
-//
-//                [self bringSubviewToFront:maskView];
-//
+                UIView* maskView = [[UIView alloc] initWithFrame:self.bounds];
+                maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+                maskView.clipsToBounds = NO;
+
+                maskView.userInteractionEnabled = NO;
+
+               // [colorwheel addTarget:self action:@selector(pickerDidChangeSelection:) forControlEvents:UIControlEventValueChanged];
+
+                [maskView addSubview:colorwheel];
+                [self addSubview:maskView];
+
+                [self bringSubviewToFront:maskView];
                 
-                [self addSubview:colorwheel];
 
                 
             } else {
@@ -106,9 +106,22 @@ float roundToTwo(float num)
             if (customViewProxy != nil){
                 customView = customViewProxy.view;
                 customView.clipsToBounds = NO;
-                customView.userInteractionEnabled = NO;
+                //customView.userInteractionEnabled = YES;
                 //customView.frame = self.bounds;
-                [self addSubview:customView];
+                
+                
+                UIView* maskView = [[UIView alloc] initWithFrame:self.bounds];
+                maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+                maskView.clipsToBounds = NO;
+
+                maskView.userInteractionEnabled = NO;
+
+               // [colorwheel addTarget:self action:@selector(pickerDidChangeSelection:) forControlEvents:UIControlEventValueChanged];
+
+                [maskView addSubview:customView];
+                [self addSubview:maskView];
+
+                [self bringSubviewToFront:maskView];
             }
         }
         
@@ -129,31 +142,43 @@ float roundToTwo(float num)
 //        [self bringSubviewToFront:maskView];
     }
     
-    self.userInteractionEnabled = YES;
+    //self.userInteractionEnabled = YES;
 
     
   [super initializeState];
 }
 
 
-//#ifndef TI_USE_AUTOLAYOUT
-//- (UIView *)viewGroupWrapper
-//{
-//  if (viewGroupWrapper == nil) {
-//    viewGroupWrapper = [[UIView alloc] initWithFrame:[self bounds]];
-//    [viewGroupWrapper setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-//  }
-//  if (colorwheel != [viewGroupWrapper superview]) {
-//    if (colorwheel != nil) {
-//      [viewGroupWrapper setFrame:[colorwheel bounds]];
-//      [colorwheel addSubview:viewGroupWrapper];
-//    } else {
-//      [viewGroupWrapper removeFromSuperview];
-//    }
-//  }
-//  return viewGroupWrapper;
-//}
-//#endif
+#ifndef TI_USE_AUTOLAYOUT
+- (UIView *)viewGroupWrapper
+{
+  if (viewGroupWrapper == nil) {
+    viewGroupWrapper = [[UIView alloc] initWithFrame:[self bounds]];
+    [viewGroupWrapper setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+  }
+  if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+          if (colorwheel != [viewGroupWrapper superview]) {
+            if (colorwheel != nil) {
+              [viewGroupWrapper setFrame:[colorwheel bounds]];
+              [colorwheel addSubview:viewGroupWrapper];
+            } else {
+              [viewGroupWrapper removeFromSuperview];
+            }
+          }
+   }
+   else {
+        if (customView != [viewGroupWrapper superview]) {
+          if (customView != nil) {
+            [viewGroupWrapper setFrame:[customView bounds]];
+            [customView addSubview:viewGroupWrapper];
+          } else {
+            [viewGroupWrapper removeFromSuperview];
+          }
+        }
+   }
+   return viewGroupWrapper;
+}
+#endif
 
 //-(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 //{
@@ -173,7 +198,7 @@ float roundToTwo(float num)
 
 - (void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 {
-    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES] == YES){
         [TiUtils setView:colorwheel positionRect:bounds];
     }
     else {
@@ -238,26 +263,32 @@ float roundToTwo(float num)
 
 - (CGFloat)verifyWidth:(CGFloat)suggestedWidth
 {
-    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES] == YES){
 //        return 38;
         return [[self colorwheel] sizeThatFits:CGSizeZero].width;
     }
-    else {
+    else if([self customview] != nil){
      //   return self.bounds.size.width;
         return [[self customview] sizeThatFits:CGSizeZero].width;
+    }
+    else {
+        return self.bounds.size.width;
     }
 //  return [[self colorwheel] sizeThatFits:CGSizeZero].width;
 }
 
 - (CGFloat)verifyHeight:(CGFloat)suggestedHeight
 {
-    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
+    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES] == YES){
 //        return 38;
         return [[self colorwheel] sizeThatFits:CGSizeZero].height;
     }
-    else {
-        //return self.bounds.size.height;
+    else if([self customview] != nil){
+     //   return self.bounds.size.width;
         return [[self customview] sizeThatFits:CGSizeZero].height;
+    }
+    else {
+        return self.bounds.size.height;
     }
 //  return [[self colorwheel] sizeThatFits:CGSizeZero].height;
 }

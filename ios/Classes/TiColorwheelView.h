@@ -9,11 +9,11 @@
     UIColorPickerViewController *pickerController;
     BOOL touchStarted;
     UIView *customView;
-//#ifndef TI_USE_AUTOLAYOUT
-//  //In the rare case where the button is treated as a view group, we must have
-//  //an empty wrapper for -[parentViewForChild:]
-//  UIView *viewGroupWrapper;
-//#endif
+#ifndef TI_USE_AUTOLAYOUT
+  //In the rare case where the button is treated as a view group, we must have
+  //an empty wrapper for -[parentViewForChild:]
+  UIView *viewGroupWrapper;
+#endif
 
 }
 @property(nonatomic,retain) TiViewProxy *containerViewController;
