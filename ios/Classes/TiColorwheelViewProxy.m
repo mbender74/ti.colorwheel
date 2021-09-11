@@ -18,11 +18,13 @@
 
 -(id)showPicker:(id)args
 {
-    return [self.pickerView showPicker:args];
+    //NSLog(@"showPickerController ");
+
+    return [self.pickerView showPickerController:args];
 }
 -(void)hidePicker:(id)args
 {
-    [self.pickerView hidePicker:args];
+    [self.pickerView hidePickerController:args];
 }
 
 

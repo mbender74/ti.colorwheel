@@ -19,8 +19,8 @@
 @property(nonatomic,retain) TiViewProxy *containerViewController;
 @property(nonatomic) bool hasReturnView;
 
--(id)showPicker:(id)args;
--(void)hidePicker:(id)args;
+-(id)showPickerController:(id)args;
+-(void)hidePickerController:(id)args;
 
 @end
 

@@ -265,7 +265,8 @@ float roundToTwo(float num)
 {
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES] == YES){
 //        return 38;
-        return [[self colorwheel] sizeThatFits:CGSizeZero].width;
+        
+        return [[self colorwheel] sizeThatFits:CGSizeMake(50,50)].width;
     }
     else if([self customview] != nil){
      //   return self.bounds.size.width;
@@ -281,7 +282,8 @@ float roundToTwo(float num)
 {
     if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES] == YES){
 //        return 38;
-        return [[self colorwheel] sizeThatFits:CGSizeZero].height;
+        
+        return [[self colorwheel] sizeThatFits:CGSizeMake(50,50)].height;
     }
     else if([self customview] != nil){
      //   return self.bounds.size.width;
@@ -292,54 +294,11 @@ float roundToTwo(float num)
     }
 //  return [[self colorwheel] sizeThatFits:CGSizeZero].height;
 }
-//#ifndef NO_SYSTEM_BUTTON
-//
+
 USE_PROXY_FOR_VERIFY_AUTORESIZING
-//
-//#endif
-
-//
-//-(void)pickerDidChangeSelection:(id) obj {
-//    NSLog(@"pickerDidChangeSelection ");
-//
-//
-//    [[self proxy] fireEvent:@"selection" withObject:@{
-//        @"color": [self hexStringFromColor:colorwheel.selectedColor]
-//    }];
-//}
 
 
-
-
-#pragma Public APIs
-
-//-(void)setWidth_:(id)width_
-//{
-//    
-//    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
-//        width = TiDimensionFromObject([NSNumber numberWithInteger: 44]);
-//        [self updateContentMode];
-//
-//    }
-//    else {
-//        width = TiDimensionFromObject(width_);
-//    }
-//}
-//
-//-(void)setHeight_:(id)height_
-//{
-//    if ([TiUtils boolValue:[self.proxy valueForKey:@"systemButton"] def:YES]){
-//        height = TiDimensionFromObject([NSNumber numberWithInteger: 44]);
-//        [self updateContentMode];
-//
-//    }
-//    else {
-//        height = TiDimensionFromObject(height_);
-//    }
-//}
-
-
--(void)hidePicker:(id)args {
+-(void)hidePickerController:(id)args {
     ENSURE_SINGLE_ARG_OR_NIL(args, NSDictionary);
 
     if (self.hasReturnView == NO){
@@ -407,9 +366,10 @@ USE_PROXY_FOR_VERIFY_AUTORESIZING
 //    [[self presentingViewController] dismissViewControllerAnimated:NO completion:nil]
 }
 
--(id)showPicker:(id)args {
+-(id)showPickerController:(id)args {
     ENSURE_SINGLE_ARG_OR_NIL(args, NSDictionary);
-
+  //  NSLog(@"showPickerController ");
+    
     if (@available(macCatalyst 14.0, *)) {
         if (isOpen == NO){
 
@@ -418,11 +378,12 @@ USE_PROXY_FOR_VERIFY_AUTORESIZING
 
                 
                 hasSelectedColor = NO;
-                
+                pickerController = [[UIColorPickerViewController alloc] init];
+
                 if ([TiUtils boolValue:[args valueForKey:@"returnView"] def:NO] == NO){
                     pickerController = [[UIColorPickerViewController alloc] init];
 
-                    pickerController.preferredContentSize = pickerController.view.bounds.size;
+                 //   pickerController.preferredContentSize = pickerController.view.bounds.size;
             //        pickerController.modalPresentationStyle
                     
                     pickerController.modalPresentationStyle = UIModalPresentationPopover;
@@ -430,14 +391,13 @@ USE_PROXY_FOR_VERIFY_AUTORESIZING
                     
                     UIPopoverPresentationController *thePresentationController = [pickerController popoverPresentationController];
                     
-                    if (self != nil && (self.window != nil)) {
+                    
+                    
+                    //if (self != nil && (self.window != nil)) {
                         thePresentationController.sourceView = self;
                         thePresentationController.sourceRect = (CGRectEqualToRect(CGRectZero, CGRectZero) ? [self bounds] : CGRectZero);
-                    }
+                    //}
                     
-                }
-                else {
-                    pickerController = [[UIColorPickerViewController alloc] init];
                 }
             
                 pickerController.presentationController.delegate = self;
@@ -488,12 +448,15 @@ USE_PROXY_FOR_VERIFY_AUTORESIZING
                 
                 
                 if ([TiUtils boolValue:[args valueForKey:@"returnView"] def:NO] == NO){
-                    [[TiApp app] controller].modalPresentationStyle = UIModalPresentationCurrentContext;
+                    //[[TiApp app] controller].modalPresentationStyle = UIModalPresentationCurrentContext;
 
                         self.hasReturnView = NO;
+                    [[TiApp app] controller].modalPresentationStyle = UIModalPresentationOverCurrentContext;
 
-                       [[[TiApp app] controller] presentViewController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES] completion:^{
-                       }];
+                    [[TiApp app] showModalController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES]];
+                    
+//                       [[[TiApp app] controller] presentViewController:pickerController animated:[TiUtils boolValue:[self.proxy valueForKey:@"animated"] def:YES] completion:^{
+//                       }];
                     return nil;
                 }
                 else {
@@ -552,6 +515,7 @@ USE_PROXY_FOR_VERIFY_AUTORESIZING
     }
   //}
 }
+
 
 
 
